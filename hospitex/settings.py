@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-v)2!@=*@b@!%z^y+1c3ixz@ww=hfmoi@jz+84^bckh@*y5jgk+
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ['https://library-management-project-wdl9.onrender.com','https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://hotel-management-v7no.onrender.com/','https://*.127.0.0.1']
 
 
 # Application definition

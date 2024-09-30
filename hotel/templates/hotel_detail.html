@@ -1,0 +1,112 @@
+{% extends 'base.html' %} {% load static %} 
+{% load crispy_forms_tags %}
+{% block body %}
+
+<style>
+    body {
+        background-color:;
+    }
+    .btn {
+        background-color: #28a745; 
+        color: white;
+        padding: 10px 20px; 
+        font-size: 16px; 
+        font-weight: bold; 
+        border-radius: 8px; 
+        border: none; 
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease; 
+    }
+    
+    .btn:hover {
+        background-color: #218838;
+        transform: scale(1.05); 
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); 
+    }
+    
+    .btn:active {
+        transform: scale(0.98); 
+    }
+    
+</style>
+
+<div class="card m-3 bg-white shadow-lg p-4 mb-5 rounded-4 border-0" style="border: 1px solid #ddd;">
+  <div class="row g-0">
+      <!-- Category Display -->
+      <div class="p-2">
+          {% for category in hotel.categories.all %}
+              <span class="badge bg-primary text-light ml-8 fs-6 p-2 me-2">{{ category.name }}</span>
+          {% endfor %}
+      </div>
+      
+      <div class="flex flex-wrap">
+        <!-- Hotel Image Section (Left) -->
+      <div class="col-12 col-md-6">
+        {% if hotel.image %}
+            <img src="{{ hotel.image.url }}" alt="{{ hotel.title }}" class="w-200 ml-8 rounded-3 shadow-sm" style="width:600px; height: 100%; object-fit: cover;">
+        {% else %}
+            <img src="{% static 'default-image.jpg' %}" alt="Default image" class="w-100 rounded-3 shadow-sm" style="height: 100%; object-fit: cover;">
+        {% endif %}
+      </div>
+
+    <!-- Hotel Info Section (Right) -->
+    <div class="col-12 col-md-6 card-body mt-16 ml-16 d-flex flex-column justify-content-center">
+        <h5 class="card-title text-center  text-primary fw-bold display-6"><strong>{{ hotel.title }}</strong></h5>
+        <p class="card-text mt-4 m-auto fs-5">{{ hotel.description }}</p>
+        <p class="card-text mt-2 fs-5"><strong>Available: </strong> {{ hotel.rooms }}</p>
+        <p class="card-text mt-2"><strong>Contact No: </strong>{{ hotel.phone_no }}</p>
+        <p class="card-text mt-4 fs-5"><strong>Reviews: </strong> {{ reviews|length }} found</p>
+        <p class="card-text mb-8 fs-5"><strong>Price: $</strong>{{ hotel.price }}</p>
+
+
+        {% if request.user.is_authenticated %}
+        <form method="post" action="{% url 'book_hotel' hotel.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-lg mt-3 shadow-lg">Book Now</button>
+        </form>
+        {% endif %}
+      </div>
+      </div>
+
+  </div>
+</div>
+
+  
+
+
+  <section>
+    <div class="card m-2">
+        <h5 class="p-2 bg-white rounded fs-5 fw-bold"><strong>Total Comments : </strong> {{ reviews | length }}</h5>
+
+        {% for review in reviews %}
+    <div class="card-body p-2 bg-white rounded fs-5 fw-bold border m-2 ">
+        <p><b>{{review.user.username}}</b>  {{ review.created_on}}</p>
+        <p>{{review.comment}}</p>
+        <p>{{review.rating}}</p>
+        
+    </div>
+    {% endfor %}
+</div>
+
+<div class="card m-2">
+  <div class="card-body">
+    {% if request.user.is_authenticated %}
+     
+    {% if user_has_booked %} 
+
+      <form  method='post' style="">
+        
+        <h1 class="text-center mx-auto my-4"><strong>Add Comment</strong></h1>
+
+        {% csrf_token %}
+        {{comment_form | crispy}}
+    
+        <button class="btn btn-warning">Submit</button>
+    </form>
+    {% endif %}
+    {% endif %}
+    </div>
+  </div>
+  </section>
+{% endblock %}

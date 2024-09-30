@@ -1,0 +1,38 @@
+{% load static %}
+<footer class="footer bg-blue-800 text-black relative border-b-2 mt-10">
+    <div class="container flex flex-wrap w-75 m-auto row p-5">
+        <div class="col-md-6 ml-16 mr-32">
+          <p><small>Copyright © HOSPITEX. All Rights Reserved</small></p>
+          <h5>Follow US</h5>
+          <div class="flex">
+            <img src="{% static 'fb.png' %}" alt="Facebook Icon" style="margin-right:10px; width: 25px;" />
+            <img src="{% static 'linkedin.png' %}" alt="linkedin Icon" style="margin-right:10px; width: 25px;" />
+            <img src="{% static 'youtube.png' %}" alt="youtube Icon" style="width:25px;" />
+          </div>
+        </div>
+        <div class="col-md-3 ml-16 mr-32">
+          <h5>Company</h5>
+          <li>About</li>
+          <li>FAQ</li>
+          <li>Signup</li>
+          <li>Blog</li>
+        </div>
+        <div class="col-md-3 ml-16 mr-326">
+          <h5>Terms and Coditions</h5>
+          <li>Policy</li>
+          <li><a href="{% url "contact" %}">Contact us</a></li>
+          <li>Signin</li>
+          <li>Query</li>
+        </div>
+      </div>
+      <hr />
+    <div class="container mx-auto px-6">
+        <div class="mt-5 flex flex-col items-center">
+            <div class="sm:w-2/3 text-center py-0 pb-2">
+                <p class="text-md text-black font-bold mb-2">
+                    © {% now "Y" %} Modified by HOSPITEX Authority
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% load static %}
+
+<!-- Banner Section -->
+<div class="banner h-96 flex items-center justify-center bg-cover bg-center text-center"
+style="background-image: url('{% static 'hotel-bg.jpg' %}'); background-size: cover; height:100vh;">
+    <div class="">
+        <h1 class="text-white text-5xl font-bold tracking-wide mb-4">Welcome to HOSPITEX</h1>
+        <div class="max-w-4xl mx-auto px-6">
+            <p class="text-white text-lg">
+                Hospitex is a premium hotel that combines luxury and comfort to create an unforgettable guest experience. Nestled in a prime location, Hospitex offers modern, spacious rooms and suites with stunning views, exceptional amenities, and world-class service. Whether you're here for business or leisure, enjoy our elegant dining options, state-of-the-art facilities, and a serene ambiance that caters to your every need. At Hospitex, your stay is more than just a visit—it's a lavish escape designed for relaxation, indulgence, and seamless hospitality.
+            </p>
+        </div>
+        
+    </div>
+</div>
+
+
+<!-- Hotels Section -->
+
+<div class="" style="padding-bottom: 200px;">
+    <section class="">
+        <h2 class="text-center text-4xl font-semibold mb-8 mx-auto text-gray-800">Explore Our Hotels In District</h2>
+      
+      <div class="mx-auto  bg-white py-2  mb-8 flex flex-wrap justify-center">
+        <div class="m-2">
+          <div class="box text-center border border-gray-400 rounded-md py-2 px-4 hover:shadow-md">
+            <a href="{% url 'home' %}" class="text-decoration-none text-10xl text-gray-800" style="font-size: 22px;"><h3>All</h3></a>
+          </div>
+        </div>
+        {% for category in categories %}
+          <div class="m-2">
+            <div class="box text-center border border-gray-400 rounded-md py-2 px-4 hover:shadow-md">
+              <a href="{% url "Hotel_list_category" category.slug %}" class="text-decoration-none text-10xl text-gray-800" style="font-size: 22px;"><h3>{{ category.name }}</h3></a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  
+    <hr />
+    
+     <style>
+       .card {
+         background: white;
+        padding: 1rem; 
+        margin: 0.5rem; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 1px 4px 10px;
+      }
+    
+      .card img {
+        max-width: 250px;
+        width: 100%; 
+        height: auto; 
+        max-height: 220px; 
+        object-fit: cover; 
+        margin-bottom: 1rem; 
+      }
+    </style>
+    
+    <section class="p-5  bg-green-50 md:p-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-4 items-start" style="padding-top: 10px;">
+      {% for hotel in hotels %}
+        <section class="card bg-purple-50 text-center transform duration-500 hover:-translate-y-2 cursor-pointer">
+          <img src="{{ hotel.image.url }}" alt="{{ hotel.title }}" />
+          
+          <a href="{% url "hotel_detail" hotel.id %}" class="text-decoration-none text-gray-800"><h4 class="text-3xl my-5">{{ hotel.title }}</h4> </a>
+          <p class="card-text">{{ hotel.description|truncatechars:70 }}</p>
+          <p class="card-text">Available: {{ hotel.quantity }}</p>
+          <h2 class="font-semibold mb-4">${{ hotel.price }}</h2>
+          <a href="">
+            <button class="p-2 px-6 bg-purple-500 text-white rounded-md hover:bg-purple-600">Book Now</button>
+          </a>
+        </section>
+        {% endfor %}
+      </section>
+
+<!-- Another Banner Section -->
+      <div class="hotel-banner-container">
+        <h2 class="text-center text-4xl font-semibold mb-8 text-gray-800">Our Most Popular Hotels Architecture</h2>
+        <div class="hotel-banner flex">
+
+            <img src="{% static 'hotel1.jpg' %}" alt="Hotel 2" class="hotel-banner-image" style="width: 350px; height: 300px;object-fit: cover;border-radius: 10px;transition: transform 0.3s ease-in-out;">
+            <img src="{% static 'hotel2.jpg' %}" alt="Hotel 2" class="hotel-banner-image" style="width: 350px; height: 300px;object-fit: cover;border-radius: 10px;transition: transform 0.3s ease-in-out;">
+            <img src="{% static 'hotel3.jpg' %}" alt="Hotel 2" class="hotel-banner-image" style="width: 350px; height: 300px;object-fit: cover;border-radius: 10px;transition: transform 0.3s ease-in-out;">
+            <img src="{% static 'hotel-4.jpg' %}" alt="Hotel 2" class="hotel-banner-image" style="width: 350px; height: 300px;object-fit: cover;border-radius: 10px;transition: transform 0.3s ease-in-out;">
+    
+        </div>
+    </div>
+    
+
+
+<!-- Contact Us Section -->
+<div class="container mx-auto py-16">
+  <h2 class="text-center text-4xl font-semibold mb-8 text-gray-800">Contact Us</h2>
+
+  <div class="w-full flex bg-gray p-8 ">
+  
+      <!-- Image Section -->
+      <div class="w-1/2 flex items-center justify-center">
+          <img src="{% static 'contact.png' %}" alt="Contact Us Image" class="object-cover rounded-lg w-full h-auto">
+      </div>
+      
+      <!-- Form Section -->
+      <div class="w-1/2 px-8 mb-4 ml-4 border rounded-lg">
+          <form action="" method="POST" class="space-y-6">
+              {% csrf_token %}
+              
+              <div class="flex flex-col">
+                  <label for="name" class="text-gray-700 font-semibold mb-2">Name</label>
+                  {{ contacts.name }}
+              </div>
+
+              <div class="flex flex-col">
+                  <label for="email" class="text-gray-700 font-semibold mb-2">Your Email</label>
+                  {{ contacts.email }}
+              </div>
+
+              <div class="flex flex-col">
+                  <label for="message" class="text-gray-700 font-semibold mb-2">Your Message</label>
+                  {{ contacts.message }}
+              </div>
+
+              <button type="submit" class="bg-blue-500 text-white mb-2 py-3 px-6 rounded-md hover:bg-blue-600 transition">
+                  Send Message
+              </button>
+          </form>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

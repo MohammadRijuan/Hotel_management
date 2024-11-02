@@ -76,21 +76,14 @@ class UserUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Apply custom widget styling
         for field in self.fields:
             self.fields[field].widget.attrs.update({
                 'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-none focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
             })
 
-        # Pre-fill fields if `UserAccount` and `UserAddress` instances exist
         if self.instance:
-            try:
-                user_account = self.instance.account
-                user_address = self.instance.address
-            except UserAccount.DoesNotExist:
-                user_account = None
-            except UserAddress.DoesNotExist:
-                user_address = None
+            user_account = getattr(self.instance, 'account', None)
+            user_address = getattr(self.instance, 'address', None)
 
             if user_account:
                 self.fields['gender'].initial = user_account.gender

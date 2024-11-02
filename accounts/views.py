@@ -89,11 +89,23 @@ class UserAccountUpdateView(View):
     template_name = 'profile.html'
     
     def get(self, request):
-        form = UserUpdateForm(instance=request.user)
+        # Ensure related instances exist before initializing the form
+        
+        user = request.user
+        UserAccount.objects.get_or_create(user=user)
+        UserAddress.objects.get_or_create(user=user)
+
+        form = UserUpdateForm(instance=user)
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
+        # Ensure related instances exist before initializing the form
+        
+        user = request.user
+        UserAccount.objects.get_or_create(user=user)
+        UserAddress.objects.get_or_create(user=user)
+
+        form = UserUpdateForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
             return redirect('profile')  # Redirect to the user's profile page

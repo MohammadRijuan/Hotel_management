@@ -60,10 +60,12 @@ class RegForm(UserCreationForm):
             })
 
 
-
 class UserUpdateForm(forms.ModelForm):
-    birth_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    gender = forms.ChoiceField(choices=[('Male', 'Male'), ('Female', 'Female')])
+    birth_date = forms.DateField(widget=forms.DateInput(attrs={'type':'date'}))
+    gender = forms.ChoiceField(choices=[
+    ('Male','Male'),
+    ('Female','Female'),
+    ])
     street_address = forms.CharField(max_length=80)
     city = forms.CharField(max_length=50)
     postal_code = forms.IntegerField()
@@ -71,29 +73,33 @@ class UserUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['first_name','last_name','email']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        
         for field in self.fields:
             self.fields[field].widget.attrs.update({
                 'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-none focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
             })
 
         if self.instance:
-            user_account = getattr(self.instance, 'account', None)
-            user_address = getattr(self.instance, 'address', None)
+            try:
+                user_account = self.instance.account
+                user_address = self.instance.address
+            except:
+                user_account = None
+                user_address = None
 
+            
             if user_account:
                 self.fields['gender'].initial = user_account.gender
                 self.fields['birth_date'].initial = user_account.birth_date
+                self.fields['street_address'].initial = user_account.street_address
+                self.fields['city'].initial = user_account.city
+                self.fields['postal_code'].initial = user_account.postal_code
+                self.fields['country'].initial = user_account.country
 
-            if user_address:
-                self.fields['street_address'].initial = user_address.street_address
-                self.fields['city'].initial = user_address.city
-                self.fields['postal_code'].initial = user_address.postal_code
-                self.fields['country'].initial = user_address.country
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -101,23 +107,22 @@ class UserUpdateForm(forms.ModelForm):
         if commit:
             user.save()
 
-            # Update or create UserAccount and UserAddress instances
             user_account, created = UserAccount.objects.get_or_create(user=user)
             user_address, created = UserAddress.objects.get_or_create(user=user)
 
-            # Update fields for UserAccount
             user_account.gender = self.cleaned_data['gender']
             user_account.birth_date = self.cleaned_data['birth_date']
             user_account.save()
 
-            # Update fields for UserAddress
-            user_address.street_address = self.cleaned_data['street_address']
-            user_address.city = self.cleaned_data['city']
-            user_address.postal_code = self.cleaned_data['postal_code']
-            user_address.country = self.cleaned_data['country']
+
+            user_address.street_address=self.cleaned_data['street_address']
+            user_address.city=self.cleaned_data['city']
+            user_address.postal_code=self.cleaned_data['postal_code']
+            user_address.country=self.cleaned_data['country']
             user_address.save()
 
         return user
+
 
 
      
